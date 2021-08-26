@@ -4,9 +4,13 @@ require('./models/db');
 
 //imports
 const express = require('express');
+var cookieParser = require('cookie-parser')
 var app = express();
+
 //const cors = require('cors');
+app.use(cookieParser())
 app.use(express.json());
+
 app.use(express.urlencoded({ extended: true }));
 app.use(function (req, res, next) {
 

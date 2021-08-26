@@ -29,11 +29,7 @@ module.exports.CheckRoles = async (req, res, next) => {
 
 module.exports.CheckUserOrEmail = async (req, res, next) => {
   try {
-    // if(req.body.username === undefined){
-    //   res.status(400).send({ message: `username is required` });
-    //   next();
-    //   return;
-    // }else if(req.bod)
+  
     const user = await User.findOne({ username: req.body.username });
     const Email = await User.findOne({ email: req.body.email });
 

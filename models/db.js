@@ -1,14 +1,15 @@
 const mongoose = require('mongoose');
 require('../config/config');
+const db = mongoose.connection;
 
-mongoose.connect(process.env.MONGO_URL, {
+const conn = mongoose.connect(process.env.MONGO_URL, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
   useCreateIndex: true,
   useFindAndModify: false
 });
 
-mongoose.connection
+db
   .once('open', () => {
     console.log("connected");
   })
@@ -16,4 +17,9 @@ mongoose.connection
     console.log(error);
   });
 
- 
+
+
+
+
+
+
