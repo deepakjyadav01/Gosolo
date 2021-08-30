@@ -63,8 +63,12 @@ module.exports.login = async (req, res) => {
         const password = req.body.password;
 
         const user = await User.findOne({ username: username }).populate("role");
+        if (user === null || undefined) {
+            return res.status(400).send("Wrong username")
+        }
         const isSame = await validator.equals(email, user.email);
         const isMatch = await bcrypt.compare(password, user.password);
+
 
         if (isMatch && isSame) {
             var authorities = [];
@@ -208,10 +212,11 @@ module.exports.RemoveUser = async (req, res) => {
     try {
         const query = req.query;
         const user = await User.findOneAndDelete(query);
-        res.status(200).json({ 
-            success:true,
-            deletedId:user._id,
-            user });
+        res.status(200).json({
+            success: true,
+            deletedId: user._id,
+            user
+        });
 
     } catch (error) {
         return res.status(400).json({ error });

@@ -14,7 +14,7 @@ const catchError = (err, res) => {
 
 verifyToken = async (req, res, next) => {
     try {
-        let token = req.headers["Authorization"];
+        let token = req.headers["x-access-token"];
 
         if (!token) {
             return res.status(403).send({ message: "No token provided!" });
@@ -25,7 +25,7 @@ verifyToken = async (req, res, next) => {
                 return catchError(err, res);
             }
             console.log(decoded);
-            req.body.id = decoded.id;
+            req.userId = decoded.id;
             next();
         });
     } catch (err) {        

@@ -3,8 +3,10 @@ require('./config/config');
 require('./models/db');
 
 //imports
+const http = require('http')
 const express = require('express');
 var cookieParser = require('cookie-parser')
+var WebSockets = require('./middlewares/WebSocket');
 var app = express();
 
 //const cors = require('cors');
@@ -23,7 +25,7 @@ app.use(function (req, res, next) {
 });
 
 //routes
-const rtr = require('./routes/router')
+const rtr = require('./routes/router');
 
 //static
 const path = require('path');
@@ -34,4 +36,9 @@ app.use(express.static(static_path));
 app.use('/api', rtr);
 
 //server
-app.listen(process.env.PORT, () => console.log(`server started at port: ${process.env.port}`));
+const server = app.listen(process.env.PORT, () => console.log(`server started at port: ${process.env.port}`));
+
+/** Create socket connection */
+const io = require('socket.io')(server);
+global.io = io.listen(server);
+global.io.on('connection', WebSockets.connection)

@@ -52,6 +52,14 @@ const UserSchema = new mongoose.Schema({
 //   }
 //   next();
 // }
+UserSchema.statics.getUserByIds = async function (ids) {
+  try {
+    const users = await this.find({ _id: { $in: ids } });
+    return users;
+  } catch (error) {
+    throw error;
+  }
+}
 
 //pre
 UserSchema.pre("save", async function (next) {

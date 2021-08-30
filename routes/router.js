@@ -11,6 +11,7 @@ const ctrlUpload = require('../controllers/upload.controller');
 const ctrlProfile = require('../controllers/profile.controllers')
 const ctrlActivity = require('../controllers/activity.controller');
 const ctrlBlogs = require('../controllers/blogs.controller');
+const chatRoom = require('../controllers/chatroom.controller');
 const mdlreg = require('../middlewares/verifyregister')
 const auth = require('../middlewares/AuthJwt')
 
@@ -24,8 +25,8 @@ router.patch("/auth/forgotpassword" , ctrlUser.forgotpass);
 router.delete("/auth/RemoveUser" , ctrlUser.RemoveUser);
 
 //api/ image uploads 
-router.post("/auth/upload", upload.single('file') , ctrlUpload.uploadFile );
-router.post("/auth/getImage", ctrlUpload.getImagesById);
+router.post("/auth/upload", [auth.verifyToken], upload.single('file') , ctrlUpload.uploadFile );
+router.post("/auth/getImage",[auth.verifyToken] ,ctrlUpload.getImagesById);
 router.delete("/auth/deleteImage", ctrlUpload.DeleteImage);
 
 //api profile 
@@ -51,12 +52,19 @@ router.patch("/auth/updatePay/:id", ctrlActivity.updatepaystatus);
 router.patch("/auth/Removebidder/:id", ctrlActivity.removebidder);
 router.delete("/auth/deletePostBy/:id", ctrlActivity.DeletePost);
 
-//api Activity
+//api Blog
 router.post("/auth/Createblog", ctrlBlogs.Createblog);
 router.post("/auth/addComment", ctrlBlogs.addcomment);
 router.get("/auth/getblogs/:id", ctrlBlogs.getblogs);
 router.get("/auth/getblogBy/:id", ctrlBlogs.getblogById);
 router.put("/auth/updateBlog/:id",ctrlBlogs.Updateblog);
 router.delete("/auth/deletePostBy/:id", ctrlBlogs.DeleteBlog);
+
+//api Chat 
+// router.post('/auth/initiate', chatRoom.initiate)
+// router.post('/auth/:roomId/message', chatRoom.postMessage)
+// router.put('/auth/:roomId/mark-read', chatRoom.markConversationReadByRoomId);
+// router.get('/auth/', chatRoom.getRecentConversation)
+// router.get('/auth/:roomId', chatRoom.getConversationByRoomId)
 
 module.exports = router;
