@@ -4,7 +4,8 @@
   "description": "A freelancer's Web application",
   "main": "app.js",
   "scripts": {
-    "start": "nodemon app.js"
+    "start": "nodemon app.js",
+    "push":"git push -u master"
   },
   "repository": {
     "type": "git",
