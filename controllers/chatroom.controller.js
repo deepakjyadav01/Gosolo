@@ -54,6 +54,26 @@ module.exports.postMessage = async (req, res) => {
     }
 }
 
+module.exports.markConversationReadByRoomId = async (req, res) => {
+    try {
+        const { roomId } = req.params;
+        const room = await ChatRoom.getChatRoomByRoomId(roomId)
+        if (!room) {
+            return res.status(400).json({
+                success: false,
+                message: 'No room exists for this id',
+            })
+        }
+
+        const currentLoggedUser = req.userId;
+        const result = await chatMessage.markMessageRead(roomId, currentLoggedUser);
+        return res.status(200).json({ success: true, data: result });
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json({ success: false, error });
+    }
+}
+
 module.exports.getConversationByRoomId = async (req, res) => {
     try {
         const { roomId } = req.params;
@@ -76,26 +96,6 @@ module.exports.getConversationByRoomId = async (req, res) => {
             users,
         });
     } catch (error) {
-        return res.status(500).json({ success: false, error });
-    }
-}
-
-module.exports.markConversationReadByRoomId = async (req, res) => {
-    try {
-        const { roomId } = req.params;
-        const room = await ChatRoom.getChatRoomByRoomId(roomId)
-        if (!room) {
-            return res.status(400).json({
-                success: false,
-                message: 'No room exists for this id',
-            })
-        }
-
-        const currentLoggedUser = req.userId;
-        const result = await chatMessage.markMessageRead(roomId, currentLoggedUser);
-        return res.status(200).json({ success: true, data: result });
-    } catch (error) {
-        console.log(error);
         return res.status(500).json({ success: false, error });
     }
 }

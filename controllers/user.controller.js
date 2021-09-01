@@ -16,7 +16,6 @@ module.exports.register = async (req, res) => {
         const password = req.body.password;
         const cpassword = req.body.cnfpass;
         const empty = validator.isEmpty(password && cpassword);
-        console.log(empty);
 
         if (password === cpassword && !empty) {
             let data = new User({
@@ -39,13 +38,16 @@ module.exports.register = async (req, res) => {
         }
     } catch (error) {
 
-        if (error.errors.username.path === "username") {
-            res.status(400).send({ message: `Failed! username is required` });
-        } else if (error.errors.email.path === "email") {
-            res.status(400).send({ message: `Failed! email is required` });
-        } else {
-            res.status(400).send(error.errors);
+        if (error.errors.username) {
+            res.status(400).send({ message: `error!! ${error.errors.username.message} ` });
+        } else if (error.errors.email) {
+            res.status(400).send({ message: `error!! ${error.errors.email.message} ` });
+        }  else if(error.errors.password || error.errors.cnfpass){
+            res.status(400).send({ message: `error!! ${error.errors.password.message} ` });
+        }else{
+            res.status(400).send(error)
         }
+       // res.status(400).send(error.errors)       
         // if (error.keyPattern.username === 1) {
         //     res.status(400).send({ message: `Failed! username ${error.keyValue.username} does exist` });
         // } else if (error.keyPattern.email === 1) {
@@ -70,7 +72,7 @@ module.exports.login = async (req, res) => {
         const isMatch = await bcrypt.compare(password, user.password);
 
 
-        if (isMatch && isSame) {
+        if (isMatch && isSame ) {
             var authorities = [];
             for (let i = 0; i < user.role.length; i++) {
                 authorities.push(user.role[i].name.toUpperCase());
@@ -147,9 +149,7 @@ module.exports.updatereg = async (req, res) => {
         const username = req.body.username;
         const email = req.body.email;
         const role = [req.body.role];
-
         const empty = validator.isEmpty(password && cpassword);
-        console.log(empty);
 
         if (password === cpassword && !empty) {
             if (role) {
@@ -157,7 +157,7 @@ module.exports.updatereg = async (req, res) => {
                 const roles = eg.map(role => role._id);
                 const hashpass = await bcrypt.hash(password, 10);
 
-                const user = await User.findByIdAndUpdate({ _id: req.params.id }, {
+                const user = await User.findByIdAndUpdate({ _id: req.userId }, {
                     $set: {
                         username: username,
                         email: email,

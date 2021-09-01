@@ -7,14 +7,16 @@ require('../models/db');
 const mongoose = require('mongoose');
 const Role = require('../models/role.model')
 
-module.exports.addrole = async (req,res) => {
+module.exports.addrole = async (req, res) => {
     try {
         let data = new Role({
-            name:req.body.name
+            name: req.body.name
         })
 
         const role = await data.save();
-        res.status(201).json(role);
+        if (role) {
+            res.status(201).json(role);
+        }
     }
     catch (error) {
         res.status(400).send(error);

@@ -20,7 +20,7 @@ router.post('/addrole', ctrlRole.addrole);
 router.post('/auth/register', [mdlreg.CheckRoles, mdlreg.CheckUserOrEmail], ctrlUser.register);
 router.post('/auth/login', ctrlUser.login);
 router.post("/auth/refreshtoken", ctrlUser.refreshToken);
-router.put("/auth/UpdateUserBy/:id" , ctrlUser.updatereg)
+router.put("/auth/UpdateUserById" , ctrlUser.updatereg)
 router.patch("/auth/forgotpassword" , ctrlUser.forgotpass);
 router.delete("/auth/RemoveUser" , ctrlUser.RemoveUser);
 
@@ -61,10 +61,11 @@ router.put("/auth/updateBlog/:id",ctrlBlogs.Updateblog);
 router.delete("/auth/deletePostBy/:id", ctrlBlogs.DeleteBlog);
 
 //api Chat 
-// router.post('/auth/initiate', chatRoom.initiate)
-// router.post('/auth/:roomId/message', chatRoom.postMessage)
-// router.put('/auth/:roomId/mark-read', chatRoom.markConversationReadByRoomId);
-// router.get('/auth/', chatRoom.getRecentConversation)
-// router.get('/auth/:roomId', chatRoom.getConversationByRoomId)
+router.post('/auth/initiate', chatRoom.initiate)
+router.post('/auth/:roomId/message', chatRoom.postMessage)
+router.put('/auth/:roomId/mark-read', chatRoom.markConversationReadByRoomId);
+router.get('/auth/:roomId', chatRoom.getConversationByRoomId)
+router.delete("/auth/deleteBy/:roomId", chatRoom.deleteRoomById);
+router.delete("/auth/deleteMessagesBy/:roomId", chatRoom.deleteMessageById);
 
 module.exports = router;
