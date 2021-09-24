@@ -13,19 +13,20 @@ const ActivitySchema = new Schema({
         type: String
     },
     price:{
-        type:Number
+        type:String
     },
     currency:{
         type:String,
     },
     Paystatus:{
         type:String,
-        uppercase:true,
+        lowercase:true,
         enum:['paid','unpaid'],
-        default:'UNPAID'
+        default:'unpaid'
     },
     company:{
-        type:String
+        type:String,
+        default: null
     },
     Provider: {
         type: mongoose.Schema.Types.ObjectId,
@@ -34,17 +35,21 @@ const ActivitySchema = new Schema({
     bidders: [{
         type: mongoose.Schema.Types.ObjectId,
         ref: "User",
-        default: 0
+        default: null
     }],
     Selected:{
         type: mongoose.Schema.Types.ObjectId,
-        ref: "User"
+        ref: "User",
+        default:null
     },
     confirm:{
         type:String,
-        uppercase:true,
+        lowercase:true,
         enum:['yes','no'],
         default:'no'
+    },
+    role: {
+        type: String
     },
     createdAt: {
         default: Date.now(),

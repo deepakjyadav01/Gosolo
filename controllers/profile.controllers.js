@@ -9,12 +9,12 @@ module.exports.profile = async (req, res) => {
             age: req.body.age,
             phone: req.body.phone,
             Aboutme: req.body.Aboutme,
-            qualifications: [req.body.qualifications],
-            job: [req.body.job],
+            qualifications: req.body.qualifications,
+            job: req.body.job,
             company: req.body.company,
-            worksample: [req.body.worksample],
-            user: req.body.user,
-            images: [req.body.images]
+            worksample: req.body.worksample,
+            user: req.userId,
+            images: req.body.images
         });
         const result = await data.save();
         res.status(200).json(result);
@@ -25,12 +25,15 @@ module.exports.profile = async (req, res) => {
 
 module.exports.qualifications = async (req, res) => {
     try {
-        let data = new bd.qualification({
+        let data = new bd.qualification(
+            {
             types: req.body.types,
             marks: req.body.marks,
             Institute: req.body.Institute,
-            year: req.body.year
-        });
+            year: req.body.year,
+            user: req.userId
+        }
+        );
 
         const result = await data.save();
         res.status(200).json(result);
@@ -44,13 +47,14 @@ module.exports.job = async (req, res) => {
         let data = new bd.job({
             company: req.body.company,
             duration: req.body.duration,
-            position: req.body.position
+            position: req.body.position,
+            user: req.userId
         });
 
         const result = await data.save();
         res.status(200).json(result);
     } catch (error) {
-        res.status(400).send(`Error when trying upload image: ${error}`);
+        res.status(400).send(`Error when trying : ${error}`);
     }
 };
 
@@ -58,7 +62,8 @@ module.exports.work = async (req, res) => {
     try {
         let data = new bd.worksample({
             name: req.body.name,
-            link: req.body.link
+            link: req.body.link,
+            user: req.userId
         });
 
         const result = await data.save();
@@ -76,6 +81,34 @@ module.exports.getprofile = async (req, res) => {
 
     } catch (error) {
         console.log(error)
+        res.status(400).send(error);
+    }
+}
+
+module.exports.getquali = async (req, res) => {
+    try {
+        const data = await bd.qualification.find({ _id: { $in: req.body.id } })
+        res.status(200).json(data);
+
+    } catch (error) {
+        res.status(400).send(error);
+    }
+}
+module.exports.getjob = async (req, res) => {
+    try {
+        const data = await bd.job.find({ _id: { $in: req.body.id } })
+        res.status(200).json(data);
+
+    } catch (error) {
+        res.status(400).send(error);
+    }
+}
+module.exports.getwork = async (req, res) => {
+    try {
+        const data = await bd.worksample.find({ _id: { $in: req.body.id } })
+        res.status(200).json(data);
+
+    } catch (error) {
         res.status(400).send(error);
     }
 }
@@ -156,7 +189,7 @@ module.exports.updateProfile = async (req, res) => {
         const phone = req.body.phone;
         const Aboutme = req.body.Aboutme;
         const company = req.body.company;
-        const images = [req.body.image];
+        const images = req.body.images;
 
         const data = await Profile.findByIdAndUpdate({ _id: req.params.id },
             {

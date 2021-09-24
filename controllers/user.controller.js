@@ -210,8 +210,7 @@ module.exports.forgotpass = async (req, res) => {
 
 module.exports.RemoveUser = async (req, res) => {
     try {
-        const query = req.query;
-        const user = await User.findOneAndDelete(query);
+        const user = await User.findOneAndDelete(req.userId);
         res.status(200).json({
             success: true,
             deletedId: user._id,

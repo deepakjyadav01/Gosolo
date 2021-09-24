@@ -12,11 +12,13 @@ const BlogSchema = new Schema({
         ref: "User"
     },
     body: {
-        type: String
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Blogbody",
     },
     comments: [{
         type: mongoose.Schema.Types.ObjectId,
         ref: "Comment",
+        default:null
     }],
     category: {
         type: String
@@ -31,8 +33,23 @@ const BlogSchema = new Schema({
     },
 })
 
+const BlogbodySchema = new Schema({
+    user: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User"
+    },
+    body: {
+        type: String
+    },
+    createdAt: {
+        default: Date.now(),
+        type: Date,
+    },
+})
+
 
 const Blog = mongoose.model("Blog", BlogSchema);
+const Blogbody = mongoose.model("Blogbody", BlogbodySchema);
 
 
-module.exports = Blog;
+module.exports = {Blog,Blogbody};

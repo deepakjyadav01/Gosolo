@@ -14,6 +14,11 @@ const qualificationSchema = new Schema({
     },
     year: {
         type: String
+    },
+    user: {
+        required: true,
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User"
     }
 });
 
@@ -26,6 +31,11 @@ const jobSchema = new Schema({
     },
     position: {
         type: String
+    },
+    user: {
+        required: true,
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User"
     }
 });
 
@@ -35,7 +45,12 @@ const worksampleSchema = new Schema({
     },
     link: {
         type: String,
-        maxlength: 40
+        maxlength: 80
+    },
+    user: {
+        required: true,
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User"
     }
 });
 

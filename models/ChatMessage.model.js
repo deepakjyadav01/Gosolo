@@ -23,13 +23,19 @@ const readByRecipientSchema = new mongoose.Schema(
 
 const chatMessageSchema = new mongoose.Schema(
     {
-        chatRoomId: String,
+        chatRoomId:  {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "Chatroom"
+        },
         message: mongoose.Schema.Types.Mixed,
         type: {
             type: String,
             default: () => MESSAGE_TYPES.TYPE_TEXT,
         },
-        postedByUser: String,
+        postedByUser: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "User"
+        },
         readByRecipients: [readByRecipientSchema],
     },
     {
@@ -45,7 +51,7 @@ chatMessageSchema.statics.createPostInChatRoom = async function (chatRoomId, mes
             postedByUser,
             readByRecipients: { readByUserId: postedByUser }
         });
-        console.log(post);
+
         const aggregate = await this.aggregate([
             // get post where _id = post._id
             { $match: { _id: post._id } },
@@ -64,7 +70,7 @@ chatMessageSchema.statics.createPostInChatRoom = async function (chatRoomId, mes
             // get me a chatroom whose _id = chatRoomId
             {
                 $lookup: {
-                    from: 'Chatrooms',
+                    from: 'chatrooms',
                     localField: 'chatRoomId',
                     foreignField: '_id',
                     as: 'chatRoomInfo',
@@ -91,7 +97,7 @@ chatMessageSchema.statics.createPostInChatRoom = async function (chatRoomId, mes
                     chatRoomId: { $last: '$chatRoomInfo._id' },
                     message: { $last: '$message' },
                     type: { $last: '$type' },
-                    postedByUser: { $last: '$postedByUser' },
+                    postedByUser: { $last: '$postedByUser.username' },
                     readByRecipients: { $last: '$readByRecipients' },
                     chatRoomInfo: { $addToSet: '$chatRoomInfo.userProfile' },
                     createdAt: { $last: '$createdAt' },
@@ -99,15 +105,16 @@ chatMessageSchema.statics.createPostInChatRoom = async function (chatRoomId, mes
                 }
             }
         ]);
-        return aggregate[0];
+
+        return aggregate;
     } catch (error) {
         throw error;
     }
 }
 
-chatMessageSchema.statics.getConversationByRoomId = async function (chatRoomId, options = { }) {
+chatMessageSchema.statics.getConversationByRoomId = async function (chatRoomId, options) {
     try {
-        return this.aggregate([
+        const agg = this.aggregate([
             { $match: { chatRoomId } },
             { $sort: { createdAt: -1 } },
             // do a join on another table called users, and 
@@ -126,6 +133,8 @@ chatMessageSchema.statics.getConversationByRoomId = async function (chatRoomId, 
             { $limit: options.limit },
             { $sort: { createdAt: 1 } },
         ]);
+        
+        return agg
     } catch (error) {
         throw error;
     }

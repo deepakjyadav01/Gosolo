@@ -24,7 +24,6 @@ verifyToken = async (req, res, next) => {
             if (err) {
                 return catchError(err, res);
             }
-            console.log(decoded);
             req.userId = decoded.id;
             next();
         });

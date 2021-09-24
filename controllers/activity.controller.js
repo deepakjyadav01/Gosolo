@@ -9,9 +9,10 @@ module.exports.posts = async (req, res) => {
             category: req.body.category,
             body: req.body.body,
             price: req.body.price,
-            //company: req.body.company,
+            role: req.body.role,
+            company: req.body.company,
             currency: req.body.currency,
-            Provider: req.body.Provider,
+            Provider: req.userId,
         });
         const result = await data.save();
         res.status(200).json(result);
@@ -22,18 +23,28 @@ module.exports.posts = async (req, res) => {
 
 module.exports.addbidder = async (req, res) => {
     try {
-        const user = await Activity.findOneAndUpdate({ _id: req.params.id },
-            {
-                $push: {
-                    bidders: req.body.id
-                }
-            }, { new: true });
-
-        if (user) {
-            res.status(200).json({ user });
-        } else {
-            res.status(400).send("couldn't update data, please try again");
+        const find = await Activity.findById({ _id: req.params.id })
+        const arr = find.bidders;
+        
+        if(!arr.includes(req.body.id)){
+            const user = await Activity.findOneAndUpdate({ _id: req.params.id },
+                {
+                    $push: {
+                        bidders: req.body.id
+                    }
+                }, { new: true });
+    
+            if (user) {
+                res.status(200).json({ user });
+            } else {
+                res.status(400).send("couldn't update data, please try again");
+            }
+        }else{
+            res.status(400).json({
+                data: `${req.body.id} has already applied`
+            })
         }
+        
     } catch (error) {
         res.status(400).send(`Error when trying upload image: ${error}`);
     }
@@ -41,7 +52,7 @@ module.exports.addbidder = async (req, res) => {
 
 module.exports.getposts = async (req, res) => {
     try {
-        const data = await Activity.find({ title: { $regex: `/^${req.params.title}.*/`, options: `xsi` } })
+        const data = await Activity.find({ title: { $regex: req.params.title, $options: 'xsi' } })
             .select('_id title category price currency company Provider')
             .populate({ path: 'Provider', select: 'username' })
             .sort({ "createdAt": 1 })
@@ -57,7 +68,8 @@ module.exports.getposts = async (req, res) => {
 module.exports.getpostById = async (req, res) => {
     try {
         const data = await Activity.findById({ _id: req.params.id })
-            .populate({ path: 'Provider', select: 'username' }, { path: 'bidders', select: 'username' }, { path: 'Selected', select: 'username' });
+        .populate("Selected bidders")
+        .populate({path:'Provider' , select:'username'})
         res.status(200).json(data);
 
     } catch (error) {
@@ -122,7 +134,7 @@ module.exports.ConfirmBidder = async (req, res) => {
                     confirm: "yes"
                 }
             }, { new: true });
-            
+
         if (data) {
             res.status(200).json({ data })
         }

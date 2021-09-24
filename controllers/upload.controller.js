@@ -23,7 +23,7 @@ module.exports.uploadFile = async (req, res) => {
             filename: req.file.filename,
             caption: req.body.caption,
             category: req.body.category,
-            userId: req.body.userId,
+            userId: req.userId,
             fileId: req.file.id,
         })
         const files = req.file;

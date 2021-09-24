@@ -6,22 +6,6 @@ const makeValidation = require('@withvoid/make-validation');
 
 module.exports.initiate = async (req, res) => {
     try {
-        const validation = makeValidation(types => ({
-            payload: req.body,
-            checks: {
-                userIds: {
-                    type: types.array,
-                    options: { unique: true, empty: false, stringOnly: true }
-                },
-                chatInitiator: {
-                    type: types.string,
-                    options: { empty: false, stringOnly: true }
-                },
-                type: { type: types.enum, options: { enum: ChatRoom.CHAT_ROOM_TYPES } },
-            }
-        }));
-        if (!validation.success) return res.status(400).json({ ...validation });
-
         const { userIds, type } = req.body;
         const chatInitiator = req.userId;
         const chatRoom = await ChatRoom.initiateChat(userIds, type, chatInitiator);
@@ -48,7 +32,10 @@ module.exports.postMessage = async (req, res) => {
         const currentLoggedUser = req.userId;
         const post = await chatMessage.createPostInChatRoom(roomId, messagePayload, currentLoggedUser);
         global.io.sockets.in(roomId).emit('new message', { message: post });
-        return res.status(200).json({ success: true, post });
+
+        if (post) {
+            res.status(200).json(post);
+        }
     } catch (error) {
         return res.status(500).json({ success: false, error: error })
     }
@@ -84,46 +71,54 @@ module.exports.getConversationByRoomId = async (req, res) => {
                 message: 'No room exists for this id',
             })
         }
-        const users = await User.getUserByIds(room.userIds);
+        const users = await User.getUserByIds(room.userIds)
         const options = {
             page: parseInt(req.query.page) || 0,
             limit: parseInt(req.query.limit) || 10,
         };
         const conversation = await chatMessage.getConversationByRoomId(roomId, options);
-        return res.status(200).json({
+
+        res.status(200).json({
             success: true,
             conversation,
-            users,
+            users
         });
     } catch (error) {
-        return res.status(500).json({ success: false, error });
+        res.status(500).json({ success: false, error: error });
+
     }
 }
 
 module.exports.deleteRoomById = async (req, res) => {
     try {
         const { roomId } = req.params;
-        const room = await ChatRoomModel.remove({ _id: roomId });
-        const messages = await ChatMessageModel.remove({ chatRoomId: roomId })
-        return res.status(200).json({
-            success: true,
-            message: "Operation performed succesfully",
-            deletedRoomsCount: room.deletedCount,
-            deletedMessagesCount: messages.deletedCount,
-        });
+        const room = await ChatRoom.findByIdAndDelete({ _id: roomId });
+        const messages = await chatMessage.deleteMany({ chatRoomId: roomId });
+        if (messages) {
+            res.status(200).json({
+                success: true,
+                message: "Operation performed succesfully",
+                deletedRoomsCount: room,
+                deletedMessagesCount: messages,
+            });
+        }
     } catch (error) {
-        return res.status(500).json({ success: false, error: error })
+        res.status(500).json({ success: false, error: error })
     }
 }
 
 module.exports.deleteMessageById = async (req, res) => {
     try {
         const { messageId } = req.params;
-        const message = await ChatMessageModel.remove({ _id: messageId });
-        return res.status(200).json({
-            success: true,
-            deletedMessagesCount: message.deletedCount,
-        });
+        const msg = await chatMessage.findByIdAndDelete({ _id: messageId });
+        
+        if (msg) {
+            res.status(200).json({
+                success: true,
+                message: msg
+            });
+        }
+
     } catch (error) {
         return res.status(500).json({ success: false, error: error })
     }
