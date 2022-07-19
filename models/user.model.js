@@ -37,7 +37,11 @@ const UserSchema = new mongoose.Schema({
   role: [{
     type: mongoose.Schema.Types.ObjectId,
     ref: "Role"
-  }]
+  }],
+  profileID:{
+    type:String,
+    default: null
+  }
 });
 
 // UserSchema.methods.generateAuthToken = async function (next) {

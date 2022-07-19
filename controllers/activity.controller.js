@@ -52,12 +52,12 @@ module.exports.addbidder = async (req, res) => {
 
 module.exports.getposts = async (req, res) => {
     try {
-        const data = await Activity.find({ title: { $regex: req.params.title, $options: 'xsi' } })
+        const data = await Activity.find()
             .select('_id title category price currency company Provider')
             .populate({ path: 'Provider', select: 'username' })
             .sort({ "createdAt": 1 })
         res.status(200).json(data);
-
+        // { title: { $regex: req.params.title, $options: 'xsi' } }
     } catch (error) {
         console.log(error)
         res.status(400).send(error);

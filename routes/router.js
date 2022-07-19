@@ -22,6 +22,7 @@ router.post('/auth/login', ctrlUser.login);
 router.post("/auth/refreshtoken", ctrlUser.refreshToken);
 router.put("/auth/UpdateUserById", [auth.verifyToken] , ctrlUser.updatereg)
 router.patch("/auth/forgotpassword" , ctrlUser.forgotpass);
+router.patch("/auth/addprofileID",[auth.verifyToken] , ctrlUser.addprofileID)
 router.delete("/auth/RemoveUser" , [auth.verifyToken], ctrlUser.RemoveUser);
 
 //api/ image uploads 
@@ -45,7 +46,7 @@ router.put("/auth/updateProfile/:id",[auth.verifyToken], ctrlProfile.updateProfi
 
 //api Activity
 router.post("/auth/AddPost",[auth.verifyToken], ctrlActivity.posts);
-router.get("/auth/getposts/:title",[auth.verifyToken], ctrlActivity.getposts);
+router.get("/auth/getposts",[auth.verifyToken], ctrlActivity.getposts);
 router.get("/auth/getpostBy/:id",[auth.verifyToken], ctrlActivity.getpostById);
 router.patch("/auth/Addbidder/:id",[auth.verifyToken], ctrlActivity.addbidder);
 router.put("/auth/UpdatePost/:id",[auth.verifyToken], ctrlActivity.Updatepost);

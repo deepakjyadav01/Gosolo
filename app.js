@@ -9,18 +9,19 @@ var cookieParser = require('cookie-parser')
 var WebSockets = require('./middlewares/WebSocket');
 var app = express();
 
-//const cors = require('cors');
+// const cors = require('cors');
 app.use(cookieParser())
 app.use(express.text());
 app.use(express.json());
 
 app.use(express.urlencoded({ extended: true }));
-app.use(function (req, res, next) {
+// app.use(cors({origin: true, credentials: true}));
+app.use(function (req, response, next) {
 
-    res.setHeader('Access-Control-Allow-Origin', "*");
-    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
-    res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type');
-    res.setHeader('Access-Control-Allow-Credentials', true);
+    response.setHeader("Access-Control-Allow-Origin", "*");
+    response.setHeader("Access-Control-Allow-Credentials", "true");
+    response.setHeader("Access-Control-Allow-Methods", "GET,HEAD,OPTIONS,POST,PUT,PATCH,DELETE");
+    response.setHeader("Access-Control-Allow-Headers", "Access-Control-Allow-Headers, Origin,Accept, X-Requested-With,x-access-token, Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers");
 
     next();
 });

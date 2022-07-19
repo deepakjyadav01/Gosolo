@@ -15,17 +15,18 @@ module.exports.register = async (req, res) => {
     try {
         const password = req.body.password;
         const cpassword = req.body.cnfpass;
-        const empty = validator.isEmpty(password && cpassword);
+        // const empty = validator.isEmpty(password && cpassword);
 
-        if (password === cpassword && !empty) {
+        if (password === cpassword) {
             let data = new User({
                 username: req.body.username,
                 email: req.body.email,
                 password: password,
                 cnfpass: cpassword,
-                role: [req.body.role],
+                role: req.body.role,
 
             })
+            console.log(data)
             if (req.body.role) {
                 const eg = await Role.find({ name: { $in: req.body.role } });
                 data.role = eg.map(role => role._id);
@@ -38,16 +39,8 @@ module.exports.register = async (req, res) => {
         }
     } catch (error) {
 
-        if (error.errors.username) {
-            res.status(400).send({ message: `error!! ${error.errors.username.message} ` });
-        } else if (error.errors.email) {
-            res.status(400).send({ message: `error!! ${error.errors.email.message} ` });
-        }  else if(error.errors.password || error.errors.cnfpass){
-            res.status(400).send({ message: `error!! ${error.errors.password.message} ` });
-        }else{
-            res.status(400).send(error)
-        }
-       // res.status(400).send(error.errors)       
+        console.log(error)
+        // res.status(400).send(error.errors)       
         // if (error.keyPattern.username === 1) {
         //     res.status(400).send({ message: `Failed! username ${error.keyValue.username} does exist` });
         // } else if (error.keyPattern.email === 1) {
@@ -72,7 +65,7 @@ module.exports.login = async (req, res) => {
         const isMatch = await bcrypt.compare(password, user.password);
 
 
-        if (isMatch && isSame ) {
+        if (isMatch && isSame) {
             var authorities = [];
             for (let i = 0; i < user.role.length; i++) {
                 authorities.push(user.role[i].name.toUpperCase());
@@ -90,7 +83,8 @@ module.exports.login = async (req, res) => {
                 email: user.email,
                 role: authorities,
                 accessToken: token,
-                RefreshToken: refreshToken
+                RefreshToken: refreshToken,
+                profileID: user.profileID
             })
 
             res.status(200).json(data);
@@ -173,6 +167,24 @@ module.exports.updatereg = async (req, res) => {
         } else {
             res.status(400).send("passwords not matching");
         }
+    } catch (error) {
+        return res.status(400).json({ error });
+
+    }
+}
+
+module.exports.addprofileID = async (req, res) => {
+    try {
+
+        const profileID = req.body.profileID;
+
+        const user = await User.findByIdAndUpdate({ _id: req.userId }, {
+            $set: {
+                profileID: profileID
+            }
+        }, { new: true })
+
+        res.status(200).json(user);
     } catch (error) {
         return res.status(400).json({ error });
 

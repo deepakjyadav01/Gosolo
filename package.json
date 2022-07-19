@@ -5,7 +5,7 @@
   "main": "app.js",
   "scripts": {
     "start": "nodemon app.js",
-    "push":"git push -u master"
+    "push":"git push -u origin master"
   },
   "repository": {
     "type": "git",
