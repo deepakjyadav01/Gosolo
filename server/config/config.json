@@ -2,10 +2,9 @@
 
   "development": {
     "PORT": 3200,
-    "MONGO_URL": " mongodb://localhost:27017/GoSolo"
+    "MONGO_URL": "mongodb+srv://deepak2803:deepak2803@gosolo.pfp4te6.mongodb.net/?retryWrites=true&w=majority"
   },
   "production": {
-    "PORT": 60,
     "MONGO_URL": " mongodb://xxxxx/DB_NAME"
   }
 }

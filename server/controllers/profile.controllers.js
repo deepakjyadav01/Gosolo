@@ -76,7 +76,7 @@ module.exports.work = async (req, res) => {
 module.exports.getprofile = async (req, res) => {
     try {
         const pro = await Profile.findById({ _id: req.params.id })
-           // .populate("qualifications job worksample user images");
+           .populate("qualifications job worksample user images");
         res.status(200).json(pro);
 
     } catch (error) {
