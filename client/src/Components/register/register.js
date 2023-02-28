@@ -1,16 +1,18 @@
 import React from 'react';
 import img2 from '../assets/signup.jpg'
+import PlaceholderImg from '../assets/Lsignup.jpg'
 import { Link } from "react-router-dom";
+import { LazyLoadImage } from "react-lazy-load-image-component";
 
 export function Register() {
 	return (
 		<>
-			<div className='p-20'>
+			<div className='pb-20 pt-14'>
 				<section class="bg-inherit min-h-screen flex items-center justify-center">
 					{/* Login */}
 					<div class="bg-transparent font-serif flex justify-between  border-2 rounded-2xl shadow-lg max-w-3xl p-5">
 						{/* form */}
-						<div class="sm:w-1/2 px-8">
+						<div class="sm:w-1/2 my-auto px-8">
 							<h2 class="pt-2 font-medium text-4xl">Register</h2>
 							<p class="text-m text-gray-600 mt-4">If you are new, please register here</p>
 							<form autoComplete='off' action="" class="flex flex-col gap-4 pt-4">
@@ -63,7 +65,7 @@ export function Register() {
 									Register
 								</button>
 							</form>
-{/*
+							{/*
 							<div class="mt-10 grid grid-cols-3 items-center text-gray-500">
 								<hr class="border-gray-500" />
 								<p class="text-center text-sm">OR</p>
@@ -85,8 +87,8 @@ export function Register() {
 	</button> */}
 							<hr class="mt-10 mb-6 border-gray-500" />
 							<div class=" mt-3 pb-4 text-xs flex justify-between items-center">
-								<p class='rounded-xl'>Already,If you have an account plz Login here.</p>
-								<Link to="/login" class="bg-white border px-5 py-2 rounded-xl hover:bg-primary">
+								<p class='rounded-xl'>Already,If you have an account then Login here.</p>
+								<Link to="/login" class="bg-white border ml-2 px-5 py-2 rounded-xl hover:bg-primary">
 									Login
 								</Link>
 							</div>
@@ -94,7 +96,8 @@ export function Register() {
 
 						{/* image */}
 						<div class="sm:block hidden  w-1/2 pl-6 ">
-							<img class="rounded-2xl min-h-full justify-center" src={img2} alt="" />
+							<LazyLoadImage class="rounded-2xl min-h-full justify-center"
+								PlaceholderSrc={PlaceholderImg} src={img2} alt="" />
 						</div>
 					</div>
 				</section>
