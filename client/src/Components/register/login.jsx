@@ -6,10 +6,10 @@ import { LazyLoadImage } from "react-lazy-load-image-component";
 
 export function Login() {
     return (
-        <> <div className="pb-20 pt-12">
+        <> <div className="pb-20 pt-16">
             <section class="bg-inherit min-h-screen flex items-center justify-center">
                 {/* Login */}
-                <div class="bg-transparent font-serif justify-between flex rounded-2xl shadow-lg max-w-3xl p-5">
+                <div class="bg-transparent font-serif  border-2 justify-between flex rounded-2xl shadow-lg max-w-3xl p-5">
                     {/* form */}
                     <div class="sm:w-1/2 mr-2 my-auto px-8">
                         <h2 class="font-medium text-4xl">Login</h2>
@@ -58,7 +58,7 @@ export function Login() {
                     </div>
                 </div>
             </section>
-            </div>
+        </div>
         </>
     )
 }

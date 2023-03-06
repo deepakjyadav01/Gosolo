@@ -19,7 +19,6 @@ module.exports.register = async (req, res) => {
 
         if (password === cpassword) {
             let data = new User({
-                username: req.body.username,
                 email: req.body.email,
                 password: password,
                 cnfpass: cpassword,
@@ -50,10 +49,22 @@ module.exports.register = async (req, res) => {
         // }
     }
 }
+module.exports.getusername = async (req, res) => {
+    try {
+        const data = await User.find({ email: req.params.email }).count()
+        if(data>1){
+            res.status(200).json("Not Available!!!l");
+        }else{
+            res.status(200).json("Available!!!l");
+        }
+    } catch (error) {
+        console.log(error)
+        res.status(400).send(error);
+    }
+}
 
 module.exports.login = async (req, res) => {
     try {
-        const username = req.body.username;
         const email = req.body.email;
         const password = req.body.password;
 
@@ -140,7 +151,6 @@ module.exports.updatereg = async (req, res) => {
 
         const password = req.body.password;
         const cpassword = req.body.cnfpass;
-        const username = req.body.username;
         const email = req.body.email;
         const role = [req.body.role];
         const empty = validator.isEmpty(password && cpassword);

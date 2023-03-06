@@ -7,7 +7,7 @@ import { LazyLoadImage } from "react-lazy-load-image-component";
 export function Register() {
 	return (
 		<>
-			<div className='pb-20 pt-14'>
+			<div className='pb-20 pt-16'>
 				<section class="bg-inherit min-h-screen flex items-center justify-center">
 					{/* Login */}
 					<div class="bg-transparent font-serif flex justify-between  border-2 rounded-2xl shadow-lg max-w-3xl p-5">
@@ -16,7 +16,7 @@ export function Register() {
 							<h2 class="pt-2 font-medium text-4xl">Register</h2>
 							<p class="text-m text-gray-600 mt-4">If you are new, please register here</p>
 							<form autoComplete='off' action="" class="flex flex-col gap-4 pt-4">
-								<input autoComplete='off'
+								<input 
 									class="outline-none p-2 mt-5 rounded-xl border"
 									type="text"
 									name="email"
