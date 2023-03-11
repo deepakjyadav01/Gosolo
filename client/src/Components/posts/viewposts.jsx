@@ -11,9 +11,9 @@ export function Viewposts() {
           </div>
 
           <div class="bg-white text-black border-slate-300 rounded-2xl shadow-lg">
-             <div class="h-42 overflow-hidden">
+            <div class="h-42 overflow-hidden">
               <img class=" rounded-lg rounded-r-xl" src={img1} alt="" />
-             </div>
+            </div>
             <div className=" pt-4">
               <h3 class="px-4 text-base font-bold">Machine Learning</h3>
               <p class="px-4 text-xs">Posted by ..... "Username"</p>
@@ -110,4 +110,4 @@ export function Viewposts() {
     </>
   );
 }
-export default Viewposts;
+export default Viewposts

@@ -38,7 +38,7 @@ export function Header() {
 
                 <div className="px-8 pt-7 lg:px-8">
                     <nav
-                        className="flex items-center justify-between"
+                        className="flex items-center justify-between "
                         aria-label="Global"
                     >
                         <div className="flex lg:hidden">
@@ -54,21 +54,21 @@ export function Header() {
                         <div className="hidden lg:flex lg:gap-x-12">
                             <Link
                                 to="/home"
-                                className="text-base font-semibold leading-6 text-gray-900"
+                                className=" font-semibold leading-6 text-lg text-gray-900"
                             >
                                 Home
                             </Link>
                             { initialState.isAuthenticated ? (
                                 <Link
                                 to="/register"
-                                className="text-base font-semibold leading-6 text-gray-900"
+                                className="text-lg font-semibold leading-6 text-gray-900"
                             >
                              Profile
                             </Link>
                             ):
                             <Link
                                 to="/register"
-                                className="text-base font-semibold leading-6 text-gray-900"
+                                className="text-lg font-semibold leading-6 text-gray-900"
                             >
                              Signup
                             </Link>
@@ -76,7 +76,7 @@ export function Header() {
                             
                             <Link
                                 to="/ViewPosts"
-                                className="text-base font-semibold leading-6 text-gray-900"
+                                className="text-lg font-semibold leading-6 text-gray-900"
                             >
                                 Posts
                             </Link>
@@ -84,14 +84,14 @@ export function Header() {
                         <div className="hidden lg:flex lg:flex-1 lg:justify-end">
                         { initialState.isAuthenticated ? (
                                 <p
-                                className="text-base font-semibold leading-6 text-gray-900"
+                                className="text-lg font-semibold leading-6 text-gray-900"
                             >
-                             Hey,{initialState.userDetails.username}
+                             Hey,{initialState.userDetails.email}
                             </p>
                             ):
                             <Link
                                 to="/login"
-                                className="text-base font-semibold leading-6 text-gray-900"
+                                className="text-lg font-semibold leading-6 text-gray-900"
                             >
                                 Log in <span aria-hidden="true">&rarr;</span>
                             </Link>

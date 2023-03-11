@@ -11,15 +11,6 @@ module.exports.CheckRoles = async (req, res, next) => {
       return;
     }
 
-    if (roles) {
-      for (i = 0; i <= roles.length; i++) {
-        if (!ROLES.includes(roles[i]) && roles[i] != undefined) {
-          res.status(400).send({ message: `Failed! Role ${roles[i]} does not exist` });
-          return;
-        }
-      } next();
-      return;
-    }
   } catch (error) {
     res.status(400).send(error);
     console.log(error);
@@ -30,13 +21,9 @@ module.exports.CheckRoles = async (req, res, next) => {
 module.exports.CheckUserOrEmail = async (req, res, next) => {
   try {
   
-    const user = await User.findOne({ username: req.body.username });
     const Email = await User.findOne({ email: req.body.email });
 
-    if (user) {
-      res.status(400).send({ message: `failed! username ${req.body.username} already exists:` });
-      return;
-    } else if (Email) {
+   if (Email) {
       res.status(400).send({ message: `failed! email ${req.body.email} already exists:` });
       return;
     } else {

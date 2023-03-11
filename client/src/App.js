@@ -7,7 +7,7 @@ import { Login } from "./Components/register/login";
 import { Viewposts } from "./Components/posts/viewposts";
 import { Header } from "./Components/home/header";
 import { AuthProvider } from "./Components/context";
-
+import { Profile } from "./Components/home/Profile";
 function App() {
   
   return (
@@ -21,6 +21,7 @@ function App() {
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
             <Route path="/ViewPosts" element={<Viewposts />} />
+            <Route path="/Profile" element={<Profile />} />
           </Routes>
       </div>
     </AuthProvider>

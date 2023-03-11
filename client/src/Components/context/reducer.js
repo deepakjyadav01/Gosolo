@@ -1,9 +1,9 @@
 
 let user = localStorage.getItem("currentUser")
-    ? JSON.parse(localStorage.getItem("currentUser")).user
+    ? JSON.parse(localStorage.getItem("currentUser"))
     : "";
 let token = localStorage.getItem("currentUser")
-    ? JSON.parse(localStorage.getItem("currentUser")).auth_token
+    ? JSON.parse(localStorage.getItem("currentUser")).accessToken
     : "";
 
 export const initialState = {
@@ -24,10 +24,10 @@ export const AuthReducer = (initialState, action) => {
         case "LOGIN_SUCCESS":
             return {
                 ...initialState,
-                user: action.payload.user,
-                token: action.payload.auth_token,
-                loading: false,
                 isAuthenticated: true,
+                user: action.payload,
+                token: action.payload.accessToken,
+                loading: true,
             };
         case "LOGOUT":
             return {
@@ -42,6 +42,37 @@ export const AuthReducer = (initialState, action) => {
                 loading: false,
                 errorMessage: action.error
             };
+
+        default:
+            throw new Error(`Unhandled action type: ${action.type}`);
+    }
+};
+export const RegUser = {
+    isSubmitting: false,
+    email:"",
+    password:"",
+    cnfpass:"",
+    loading: false,
+    errorMessage: null
+};
+
+export const RegReducer = (RegUser, action) => {
+    switch (action.type) {
+        case "REG_SUCCESS":
+            return {
+                ...RegUser,
+                email: action.payload.email,
+                password: action.payload.password,
+                cnfpass: action.payload.cnfpass,
+                isSubmitting:true,
+                loading:true
+            };
+            case "REG_ERROR":
+                return {
+                    ...RegUser,
+                    loading: false,
+                    errorMessage: action.error
+                };
 
         default:
             throw new Error(`Unhandled action type: ${action.type}`);

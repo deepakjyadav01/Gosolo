@@ -18,7 +18,7 @@ const auth = require('../middlewares/AuthJwt')
 // /api/user registration
 router.post('/addrole', ctrlRole.addrole);
 router.post('/auth/register', [mdlreg.CheckRoles, mdlreg.CheckUserOrEmail], ctrlUser.register);
-router.get("/auth/checkemail/:email",[auth.verifyToken], ctrlUser.getusername);
+router.get("/auth/checkemail/:email",ctrlUser.getemail);
 router.post('/auth/login', ctrlUser.login);
 router.post("/auth/refreshtoken", ctrlUser.refreshToken);
 router.put("/auth/UpdateUserById", [auth.verifyToken] , ctrlUser.updatereg)

@@ -15,7 +15,6 @@ module.exports.register = async (req, res) => {
     try {
         const password = req.body.password;
         const cpassword = req.body.cnfpass;
-        // const empty = validator.isEmpty(password && cpassword);
 
         if (password === cpassword) {
             let data = new User({
@@ -25,37 +24,31 @@ module.exports.register = async (req, res) => {
                 role: req.body.role,
 
             })
-            console.log(data)
+
             if (req.body.role) {
-                const eg = await Role.find({ name: { $in: req.body.role } });
+                const eg = await Role.find({ name: req.body.role });
                 data.role = eg.map(role => role._id);
                 const reg = await data.save();
                 res.status(201).json(reg);
+                
             }
         }
         else {
             res.status(400).send("passwords not matching");
         }
     } catch (error) {
-
         console.log(error)
-        // res.status(400).send(error.errors)       
-        // if (error.keyPattern.username === 1) {
-        //     res.status(400).send({ message: `Failed! username ${error.keyValue.username} does exist` });
-        // } else if (error.keyPattern.email === 1) {
-        //     res.status(400).send({ message: `Failed! username ${error.keyValue.email} does exist` });
-        // } else {
-        //     res.status(400).send(error.errors);
-        // }
+        res.status(400).send(error)       
+        
     }
 }
-module.exports.getusername = async (req, res) => {
+module.exports.getemail = async (req, res) => {
     try {
         const data = await User.find({ email: req.params.email }).count()
-        if(data>1){
-            res.status(200).json("Not Available!!!l");
-        }else{
-            res.status(200).json("Available!!!l");
+        if(data >= 1){
+            res.status(200).json("Not Available!");
+        }else if(data===0){
+            res.status(200).json("Available!");
         }
     } catch (error) {
         console.log(error)
@@ -68,9 +61,9 @@ module.exports.login = async (req, res) => {
         const email = req.body.email;
         const password = req.body.password;
 
-        const user = await User.findOne({ username: username }).populate("role");
+        const user = await User.findOne({ email: email }).populate("role");
         if (user === null || undefined) {
-            return res.status(400).send("Wrong username")
+            return res.status(400).send("Wrong user")
         }
         const isSame = await validator.equals(email, user.email);
         const isMatch = await bcrypt.compare(password, user.password);
@@ -90,7 +83,6 @@ module.exports.login = async (req, res) => {
 
             let data = ({
                 id: user._id,
-                username: user.username,
                 email: user.email,
                 role: authorities,
                 accessToken: token,
@@ -99,6 +91,7 @@ module.exports.login = async (req, res) => {
             })
 
             res.status(200).json(data);
+            console.log(data)
         } else {
             res.status(400).send("please enter valid user details and try again");
         }
